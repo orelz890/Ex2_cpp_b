@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdexcept": "cpp",
+        "unordered_map": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
+    }
+}
