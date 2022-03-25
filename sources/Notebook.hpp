@@ -10,7 +10,7 @@ using namespace ariel;
 #define MIN_CHAR 32
 #define MAX_CHAR 126
 #define LINE_LEN 100
-#define MIN_POSITION 0
+#define MIN_PAGE 0
 
 int last_row_filled = 0;
 int last_row_col_filled = 0;

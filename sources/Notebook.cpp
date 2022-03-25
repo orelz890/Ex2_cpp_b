@@ -8,11 +8,37 @@
 using ariel::Direction;
 
 namespace ariel{
+
+    void fill_with_under_score(int page, int row, int col, Direction diraction){
+        if (direction == Direction::Horizontal){
+            // Filling the empty spaces with under score
+            for (int i = last_row_filled; i <= row; i++){
+                // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
+                for (int j = 0; j <= LINE_LEN; j++){
+                    // If its a new char cel fill with under score
+                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
+                        notebook[page][i][j] = '_';
+                    }
+                }
+            }
+        // Verticacl
+        else{
+            // Filling the empty spaces with under score
+            for (int i = last_row_filled; i <= row + data_len; i++){
+                // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
+                for (int j = 0; j <= LINE_LEN; j++){
+                    // If its a new char cel fill with under score
+                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
+                        notebook[page][i][j] = '_';
+                    }
+                }
+            }
+    }
     
     void Notebook::write(int page, int row, int col, Direction direction, const string & data){
 
         int data_len = data.length();
-        if(page < MIN_POSITION || row < MIN_POSITION || col < MIN_POSITION){
+        if(page < MIN_PAGE || row < MIN_PAGE || col < MIN_PAGE){
             throw runtime_error("page & row & column position most be positive!");
         }
         if(col > LINE_LEN || (direction == Direction::Horizontal && col + data_len > LINE_LEN)){
@@ -33,35 +59,16 @@ namespace ariel{
                 throw runtime_error("Cant over write!");
             }
         }
-        
-        if (direction == Direction::Horizontal){   
-            // Filling the empty spaces with under score
-            for (int i = last_row_filled; i <= row; i++){
-                // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
-                for (int j = 0; j <= LINE_LEN; j++){
-                    // If its a new char cel fill with under score
-                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
-                        notebook[page][i][j] = '_';
-                    }
-                }
-            }
+        // Fill the empty spaces with an under score
+        fill_with_under_score(page, row, col, direction);
+
+        if (direction == Direction::Horizontal){
             for (int i = 0; i < data_len; i++){
                 notebook[page][row][col+i] = data[i];
-            }
-            
+            }         
         }
         // Verticacl
         else{
-            // Filling the empty spaces with under score
-            for (int i = last_row_filled; i <= row + data_len; i++){
-                // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
-                for (int j = 0; j <= LINE_LEN; j++){
-                    // If its a new char cel fill with under score
-                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
-                        notebook[page][i][j] = '_';
-                    }
-                }
-            }
             for (int i = 0; i < data_len; i++){
                 notebook[page][row+i][col] = data[i];
             }
@@ -70,7 +77,7 @@ namespace ariel{
     }
 
     string Notebook::read(int page, int row, int col, Direction direction, int readLength){
-        if(page < MIN_POSITION || row < MIN_POSITION || col < MIN_POSITION || readLength < MIN_POSITION){
+        if(page < MIN_PAGE || row < MIN_PAGE || col < MIN_PAGE || readLength < MIN_PAGE){
             throw runtime_error("page & row & column & num of char to read most be positive!");
         }
         if(col > LINE_LEN || (direction == Direction::Horizontal && col + readLength > LINE_LEN)){
@@ -89,13 +96,30 @@ namespace ariel{
     }
 
     void Notebook::erase(int page, int row, int col, Direction direction, int eraselength){
-        if(page < MIN_POSITION || row < MIN_POSITION || col < MIN_POSITION || eraselength < MIN_POSITION){
+        if(page < MIN_PAGE || row < MIN_PAGE || col < MIN_PAGE || eraselength < MIN_PAGE){
             throw runtime_error("page & row & column & num of char to erse most be positive!");
         }
         if(col > LINE_LEN || (direction == Direction::Horizontal && col + eraselength > LINE_LEN)){
             throw runtime_error("Some of the lines you want to erase do not exist!");
         }
+        for (int i = 0; i < eraselength; i++){
+            if (direction == Direction::Horizontal && notebook[page][row][col+i] == '~' ||
+                 direction == Direction::Vertical && notebook[page][row+i][col] == '~'){
+                throw runtime_error("Cant erase the same place twice");
+            }
+        }
         
+        // Fill the empty spaces with an under score
+        fill_with_under_score(page, row, col, direction);
+        
+        for (int i = 0; i < eraselength; i++){
+            if (direction == Direction::Horizontal){
+                notebook[page][row][col+i] = '~';   
+            }
+            else{
+                notebook[page][row+i][col] = '~';
+            } 
+        }
     }
 
     void Notebook::show(int page){
@@ -109,6 +133,5 @@ namespace ariel{
             }
         }     
     }
-
 
 }
