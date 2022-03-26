@@ -9,33 +9,35 @@ using ariel::Direction;
 
 namespace ariel{
 
-    void fill_with_under_score(int page, int row, int col, Direction diraction){
-        if (direction == Direction::Horizontal){
+    void fill_with_under_score(int page, int row, int col, Direction diraction, int action_len){
+        if (diraction == Direction::Horizontal){
             // Filling the empty spaces with under score
             for (int i = last_row_filled; i <= row; i++){
                 // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
                 for (int j = 0; j <= LINE_LEN; j++){
                     // If its a new char cel fill with under score
-                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
-                        notebook[page][i][j] = '_';
+                    if (Notebook::get_char_at(page, i, j) < MIN_CHAR && Notebook::get_char_at(page, i, j) > MAX_CHAR){
+                        Notebook::get_char_at(page, i, j) = '_';
                     }
                 }
             }
+        }
         // Verticacl
         else{
             // Filling the empty spaces with under score
-            for (int i = last_row_filled; i <= row + data_len; i++){
+            for (int i = last_row_filled; i <= row + action_len; i++){
                 // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
                 for (int j = 0; j <= LINE_LEN; j++){
                     // If its a new char cel fill with under score
-                    if (notebook[page][i][j] < MIN_CHAR && notebook[page][i][j] > MAX_CHAR){
-                        notebook[page][i][j] = '_';
+                    if (Notebook::get_char_at(page, i, j) < MIN_CHAR && Notebook::get_char_at(page, i, j) > MAX_CHAR){
+                        Notebook::get_char_at(page, i, j) = '_';
                     }
                 }
             }
+        }
     }
-    
-    void Notebook::write(int page, int row, int col, Direction direction, const string & data){
+
+    void Notebook::write(int page, int row, int col, Direction diraction, const string & data){
 
         int data_len = data.length();
         if(page < MIN_PAGE || row < MIN_PAGE || col < MIN_PAGE){
@@ -50,27 +52,27 @@ namespace ariel{
             }
             if (direction == Direction::Horizontal){
                 // Char is legal & not under score, means we cant write! 
-                if (notebook[page][row][col + i] >= MIN_CHAR && notebook[page][row][col + i] <= MAX_CHAR && notebook[page][row][col + i] != '_'){
+                if (Notebook::get_char_at(page, row, col+i) >= MIN_CHAR && Notebook::get_char_at(page, row, col+i) <= MAX_CHAR && Notebook::get_char_at(page, row, col+i) != '_'){
                     throw runtime_error("Cant over write!");
                 }
             }
             // Vertical
-            else if({notebook[page][row + i][col] >= MIN_CHAR && notebook[page][row+i][col] <= MAX_CHAR && notebook[page][row+i][col] != '_')
+            else if(Notebook::get_char_at(page, row+i, col) >= MIN_CHAR && Notebook::get_char_at(page, row+i, col) <= MAX_CHAR && Notebook::get_char_at(page, row+i, col) != '_'){
                 throw runtime_error("Cant over write!");
             }
         }
         // Fill the empty spaces with an under score
-        fill_with_under_score(page, row, col, direction);
+        fill_with_under_score(page, row, col, diraction, data_len);
 
-        if (direction == Direction::Horizontal){
+        if (diraction == Direction::Horizontal){
             for (int i = 0; i < data_len; i++){
-                notebook[page][row][col+i] = data[i];
-            }         
+                Notebook::set_notebook(page, row, col+i,data[i]);
+            }      
         }
         // Verticacl
         else{
             for (int i = 0; i < data_len; i++){
-                notebook[page][row+i][col] = data[i];
+                Notebook::set_notebook(page, row+i, col, data[i]);
             }
         }
 
@@ -90,7 +92,7 @@ namespace ariel{
             }
             else{
                 ans += notebook[page][row+i][col];
-            } 
+            }
         }
         return ans;
     }
@@ -110,15 +112,16 @@ namespace ariel{
         }
         
         // Fill the empty spaces with an under score
-        fill_with_under_score(page, row, col, direction);
+        fill_with_under_score(page, row, col, direction, eraselength);
         
         for (int i = 0; i < eraselength; i++){
             if (direction == Direction::Horizontal){
                 notebook[page][row][col+i] = '~';   
+                Notebook::set_notebook(page, row, col+i) = '~';
             }
             else{
-                notebook[page][row+i][col] = '~';
-            } 
+                Notebook::set_notebook(page, row+i, col) = '~';
+            }
         }
     }
 
@@ -131,7 +134,7 @@ namespace ariel{
                 }
                 std:: cout << "\n";
             }
-        }     
+        }
     }
 
 }

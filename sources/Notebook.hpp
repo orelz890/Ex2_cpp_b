@@ -28,5 +28,11 @@ namespace ariel{
         void open_new_notebook(){
             notebook.clear();
         }
+        void set_notebook(int page, int row, int col, char c){
+            notebook[page][row][col] = c;
+        }
+        char get_char_at(int page, int row, int col){
+            return notebook[page][row][col];
+        }
     };
 };
