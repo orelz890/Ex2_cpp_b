@@ -1,8 +1,3 @@
-#include "Direction.hpp"
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-#include <string>
 #include <iterator>
 #include <algorithm>
 #include "Notebook.hpp"
@@ -14,7 +9,7 @@ using ariel::Notebook;
 void Notebook::fill_with_under_score(int page, int row, int col, Direction direction, int action_len){
     if (direction == Direction::Horizontal){
         // Filling the empty spaces with under score
-        for (int i = last_row_filled; i <= row; i++){
+        for (int i = Notebook::last_row_filled; i <= row; i++){
             // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
             for (int j = 0; j <= LINE_LEN; j++){
                 // If its a new char cel fill with under score
@@ -27,7 +22,7 @@ void Notebook::fill_with_under_score(int page, int row, int col, Direction direc
     // Verticacl
     else{
         // Filling the empty spaces with under score
-        for (int i = last_row_filled; i <= row + action_len; i++){
+        for (int i = Notebook::last_row_filled; i <= row + action_len; i++){
             // notebook.insert({page, unordered_map<int, char[LINE_LEN]>()});
             for (int j = 0; j <= LINE_LEN; j++){
                 // If its a new char cel fill with under score
@@ -43,13 +38,13 @@ void Notebook::fill_with_under_score(int page, int row, int col, Direction direc
 void Notebook::write(int page, int row, int col, Direction direction, string data){
 
     int data_len = data.length();
-    if(page < MIN_PAGE || row < MIN_PAGE || col < MIN_PAGE){
+    if(page < MIN_PAGE || row < ZERO || col < ZERO){
         throw runtime_error("page & row & column position most be positive!");
     }
     if(col > LINE_LEN || (direction == Direction::Horizontal && col + data_len > LINE_LEN)){
         throw runtime_error("Writing in illegal columns!");
     }
-    for (int i = 0; i < data_len -1; i++){
+    for (int i = 0; i < data_len; i++){
         // int char_value = data[(unsigned int)i];
         if (data[(unsigned int)i] < MIN_CHAR || data[(unsigned int)i] > MAX_CHAR){
             throw runtime_error("The char u picked is not printable!");
@@ -69,7 +64,7 @@ void Notebook::write(int page, int row, int col, Direction direction, string dat
     fill_with_under_score(page, row, col, direction, data_len);
 
     if (direction == Direction::Horizontal){
-        for (int i = 0; i < data_len - 1; i++){
+        for (int i = 0; i < data_len; i++){
             // int char_value = data[(unsigned int)i];
             Notebook::set_notebook(page, row, col+i, data[(unsigned int)i]);
         }      

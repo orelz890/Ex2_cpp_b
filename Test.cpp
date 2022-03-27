@@ -1,9 +1,7 @@
 #include "doctest.h"
 #include "Notebook.hpp"
-#include <string>
 #include <algorithm>
 
-const int ZERO = 0;
 const int ONE = 1;
 const int THREE = 3;
 const int FOR = 1;

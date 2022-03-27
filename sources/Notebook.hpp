@@ -11,12 +11,12 @@ using namespace ariel;
 #define MAX_CHAR 126
 #define LINE_LEN 100
 #define MIN_PAGE 0
-
-int last_row_filled = 0;
-int last_row_col_filled = 0;
+#define ZERO 0
 
 namespace ariel{
     class Notebook{
+        int last_row_filled = 0;
+        int last_row_col_filled = 0;
     private:
         // unordered_map <int, unordered_map<int, array<char, LINE_LEN>>> notebook;
         unordered_map <int, unordered_map<int, char[LINE_LEN]>> notebook;
