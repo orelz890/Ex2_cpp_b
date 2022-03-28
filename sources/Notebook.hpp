@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <stdexcept>
 #include "Direction.hpp"
@@ -18,10 +19,7 @@ namespace ariel{
         int last_row_filled = 0;
         int last_row_col_filled = 0;
     private:
-        // unordered_map <int, unordered_map<int, array<char, LINE_LEN>>> notebook;
-        unordered_map <int, unordered_map<int, char[LINE_LEN]>> notebook;
-
-        // unordered_map <int[3], char> notebook;
+        map <int, map<int, char[LINE_LEN]>> notebook;
     public:
         // Notebook(){}
         // Notebook();
@@ -37,13 +35,8 @@ namespace ariel{
         }
         void set_notebook(int page, int row, int col, char c){
             notebook[page][row][col] = c;
-            // notebook[pair<int, int, int>(page, row)][col] = c;
-            // int pos[3] = {page, row, col};
-            // notebook.insert(pair<int[3],char>(pos, c));
         }
         char get_char_at(int page, int row, int col){
-            // char ans = notebook.find(pair<int, int, int>(page, row, col));
-            // return ans;
             return notebook[page][row][col];
         }
     };
