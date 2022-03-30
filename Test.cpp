@@ -8,7 +8,7 @@
 
 const int ONE = 1;
 const int THREE = 3;
-const int FOR = 1;
+const int FOR = 4;
 const int FIVE = 5;
 const int SIX = 6;
 const int TEN = 10;
@@ -146,7 +146,7 @@ TEST_CASE("Bad input") {
 }
 
 
-// ============================== TEST3 ===================================
+// // ============================== TEST3 ===================================
 
 
 // /**
