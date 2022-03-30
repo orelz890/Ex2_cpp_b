@@ -1,11 +1,5 @@
 #include "Notebook.hpp"
 
-const int MIN_CHAR = 32;
-const int MAX_CHAR = 126;
-const int LINE_LEN = 100;
-const int MIN_PAGE = 0;
-const int ZERO = 0;
-
 namespace ariel{
 
     void Notebook::write(int page, int row, int col, Direction direction, string data){
@@ -26,14 +20,14 @@ namespace ariel{
             }
             if (direction == Direction::Horizontal){
                 // Char is legal & not under score, means we cant write! 
-                curr_char = notebook[page][row][col+i];    
+                curr_char = get_char_at(page,row,col+i);    
                 if (curr_char != '_' && curr_char != '\0'){
                     throw runtime_error("Cant over write!");
                 }
             }
             // Vertical
             else{
-                curr_char = notebook[page][row+i][col];
+                curr_char = get_char_at(page, row+i, col);
                 if(curr_char != '_' && curr_char != '\0'){
                     throw runtime_error("Cant over write!");
                 }
@@ -43,13 +37,13 @@ namespace ariel{
         // Putting the new data
         if (direction == Direction::Horizontal){
             for (int i = 0; i < data_len; i++){
-                notebook[page][row][col+i] = data[(unsigned int)i];
+                set_notebook(page, row, col+i, data[(unsigned int)i]);
             }
         }
         // Verticacl
         else{
             for (int i = 0; i < data_len; i++){
-                notebook[page][row+i][col] = data[(unsigned int)i];
+                set_notebook(page, row+i, col, data[(unsigned int)i]);
             }
         }
 
@@ -67,7 +61,7 @@ namespace ariel{
         char curr_char = ' ';
         if (direction == Direction::Horizontal){
             for (int i = 0; i < readLength; i++){
-                curr_char = notebook[page][row][col+i];
+                curr_char = get_char_at(page, row, col+i);
                 if (curr_char == '\0'){
                     ans += '_';
                 }
@@ -77,7 +71,7 @@ namespace ariel{
             }
         }else{
             for (int i = 0; i < readLength; i++){
-                curr_char = notebook[page][row+i][col];
+                curr_char = get_char_at(page, row+i, col);
                 if (curr_char == '\0'){
                     ans += '_';
                 }
@@ -100,11 +94,12 @@ namespace ariel{
         // Fill the empty spaces with an under score
         if (direction == Direction::Horizontal){
             for (int i = 0; i < eraselength; i++){
-                notebook[page][row][col+i] = '~';
+                set_notebook(page, row, col+i, '~');
             }
-        }else{
+        }
+        else{
             for (int i = 0; i < eraselength; i++){
-                notebook[page][row+i][col] = '~';
+                set_notebook(page, row+i, col, '~');
             }
         }
     }
@@ -115,13 +110,24 @@ namespace ariel{
             throw runtime_error("The page u chose don't exist!");
         }
         string ans;
-        ans = "\n==================\nPage %d" + to_string(page) + ":\n==================\n";
-        for (auto row_it = notebook.cbegin()->second.cbegin(); row_it != notebook.cbegin()->second.cend(); ++row_it){
-            for (int i = 0; i < LINE_LEN; i++){
-                ans+= row_it->second[i];
+        ans = "\n==================\nPage " + to_string(page) + ":\n==================\n";
+        for (const auto& data: notebook[page]){
+            if (data.first <= last_row_filled){
+                ans += read(page, data.first ,ZERO ,Direction::Horizontal ,LINE_LEN);
+                ans+= "\n";
             }
-            ans+= "\n";
         }
-        cout<< ans;
+        cout<< ans << flush;
+        fflush(stdout);   
+
+        // string ans;
+        // ans = "\n==================\nPage " + to_string(page) + ":\n==================\n";
+        // for (auto row_it = notebook.cbegin()->second.cbegin(); row_it != notebook.cbegin()->second.cend(); ++row_it){
+        //     for (int i = 0; i < LINE_LEN; i++){
+        //         ans+= row_it->second[i];
+        //     }
+        //     ans+= "\n";
+        // }
+        // cout<< ans;
     }
 }
